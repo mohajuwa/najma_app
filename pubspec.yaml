@@ -1,0 +1,78 @@
+name: najma_app
+description: منصة نجمة — تطبيق التفاعل بين الفنانين والجمهور
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+
+  # Navigation
+  go_router: ^13.2.0
+
+  # Network
+  dio: ^5.4.3
+  retrofit: ^4.1.0
+
+  # Storage
+  shared_preferences: ^2.2.3
+
+  # UI
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  lottie: ^3.1.0
+
+  # WebSocket (Reverb/Pusher compatible)
+  pusher_channels_flutter: ^2.0.0
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # Utils
+  intl: ^0.20.2
+  uuid: ^4.4.0
+  url_launcher: ^6.3.0
+  image_picker: ^1.1.2
+  permission_handler: ^11.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  retrofit_generator: ^8.1.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animations/
+    - assets/fonts/
+
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal/Tajawal-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Tajawal/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Tajawal/Tajawal-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Tajawal/Tajawal-ExtraBold.ttf
+          weight: 800
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/Playfair_Display/static/PlayfairDisplay-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Playfair_Display/static/PlayfairDisplay-Black.ttf
+          weight: 900
