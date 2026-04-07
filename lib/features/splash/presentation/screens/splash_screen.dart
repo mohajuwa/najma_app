@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math' as math;
@@ -51,15 +52,21 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigate() {
     if (!mounted) return;
     final lang = LocalStorage.getLang();
+
+    // أول مرة — اختيار اللغة (go = نقطة بداية جديدة)
     if (lang == null) {
       context.go('/language');
       return;
     }
+
+    // الدور لم يختر — ابدأ من language لأن push stack تبنى من هناك
     final role = LocalStorage.getRole();
     if (role == null) {
-      context.go('/role-select');
+      context.go('/language');
       return;
     }
+
+    // مسجّل دخول مسبقاً
     final token = LocalStorage.getToken();
     context.go(
       token != null
@@ -271,3 +278,4 @@ class _Particle {
     required this.phase,
   });
 }
+

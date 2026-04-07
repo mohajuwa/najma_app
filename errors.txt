@@ -1,14 +1,16 @@
-[package:najma_app] flutter pub get --no-example
-Resolving dependencies...
-Note: intl is pinned to version 0.20.2 by flutter_localizations from the flutter SDK.
-See https://dart.dev/go/sdk-version-pinning for details.
+مشروع نجمة — نكمل من حيث توقفنا.
 
+الوضع الحالي:
+- Laravel najma-api: كل الـ 6 Modules enabled وجاهزة
+- Flutter najma_app: هيكل جاهز، pubspec يحتاج تعديل intl
+- المسارات:
+  Laravel: C:\xampp\htdocs\Dammam Projects\najma-api
+  Flutter: D:\Dammam Projects\Najma Platform\najma_app
 
-Because najma_app depends on flutter_localizations from sdk which depends on intl 0.20.2, intl 0.20.2 is required.
-So, because najma_app depends on intl ^0.19.0, version solving failed.
+الخطوة القادمة:
+1. php artisan migrate
+2. تشغيل السيرفر واختبار أول endpoint
+3. بعدها نبني شاشة اختيار اللغة في Flutter
 
-
-You can try the following suggestion to make the pubspec resolve:
-* Try upgrading your constraint on intl: flutter pub add intl:^0.20.2
-Failed to update packages.
-exit code 1
+Stack: Laravel 11 Modular + Sanctum + Reverb + Flutter Clean Arch + Bloc
+الألوان: أسود مطفي + ذهبي — Arabic RTL first
