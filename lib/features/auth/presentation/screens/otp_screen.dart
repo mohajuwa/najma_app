@@ -102,9 +102,27 @@ class _OtpScreenBodyState extends State<_OtpScreenBody>
   String get _otpValue => _otpCtrls.map((c) => c.text).join();
 
   void _onOtpChanged(String val, int idx) {
+    // دعم اللصق: إذا لصق المستخدم 6 أرقام دفعةً واحدة
+    if (val.length > 1) {
+      final digits = val.replaceAll(RegExp(r'\D'), '');
+      if (digits.length >= 6) {
+        _fillOtp(digits.substring(0, 6));
+        return;
+      }
+    }
     if (val.length == 1 && idx < 5) _otpFocus[idx + 1].requestFocus();
     if (val.isEmpty && idx > 0) _otpFocus[idx - 1].requestFocus();
     if (_otpValue.length == 6) _submitOtp();
+  }
+
+  /// توزيع 6 أرقام على جميع الخانات وإرسالها تلقائياً
+  void _fillOtp(String digits) {
+    for (int i = 0; i < 6; i++) {
+      _otpCtrls[i].text = digits[i];
+    }
+    _otpFocus[5].requestFocus();
+    setState(() {}); // تحديث الواجهة
+    Future.microtask(_submitOtp);
   }
 
   void _submitPhone() {
@@ -129,6 +147,7 @@ class _OtpScreenBodyState extends State<_OtpScreenBody>
   Future<void> _handleSuccess(AuthSuccess state) async {
     await LocalStorage.saveToken(state.token);
     await LocalStorage.saveRole(state.role);
+    await LocalStorage.saveIsArtist(state.isArtist);
     if (!mounted) return;
     context.go(state.role == 'artist' ? '/artist-dashboard' : '/home');
   }
@@ -222,7 +241,7 @@ class _OtpScreenBodyState extends State<_OtpScreenBody>
         Container(width: 36, height: 2, color: NajmaColors.gold),
         const SizedBox(height: 16),
         Text(
-          _step == 0 ? 'أهلاً بك في نجمة' : 'أدخل رمز التحقق',
+          _step == 0 ? 'أهلاً بك في نجم السهرة' : 'أدخل رمز التحقق',
           style: NajmaTextStyles.display(size: 26),
         ),
         const SizedBox(height: 8),
@@ -318,6 +337,7 @@ class _OtpScreenBodyState extends State<_OtpScreenBody>
           ),
         ),
         const SizedBox(height: 14),
+        // نستمع لأحداث الكيبورد لالتقاط اللصق (Ctrl+V / Long-press Paste)
         Directionality(
           textDirection: TextDirection.ltr,
           child: Row(
@@ -328,6 +348,7 @@ class _OtpScreenBodyState extends State<_OtpScreenBody>
                 controller: _otpCtrls[i],
                 focusNode: _otpFocus[i],
                 onChanged: (val) => _onOtpChanged(val, i),
+                onPaste: _fillOtp,
               ),
             ),
           ),
@@ -375,10 +396,14 @@ class _OtpBox extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final ValueChanged<String> onChanged;
+  /// يُستدعى عند لصق 6 أرقام
+  final ValueChanged<String>? onPaste;
+
   const _OtpBox({
     required this.controller,
     required this.focusNode,
     required this.onChanged,
+    this.onPaste,
   });
   @override
   State<_OtpBox> createState() => _OtpBoxState();
@@ -386,12 +411,23 @@ class _OtpBox extends StatefulWidget {
 
 class _OtpBoxState extends State<_OtpBox> {
   bool _focused = false;
+
   @override
   void initState() {
     super.initState();
     widget.focusNode.addListener(() {
       if (mounted) setState(() => _focused = widget.focusNode.hasFocus);
     });
+  }
+
+  /// استيعاب اللصق من قائمة السياق (long-press → Paste)
+  Future<void> _handlePasteAction() async {
+    final data = await Clipboard.getData('text/plain');
+    final text = data?.text ?? '';
+    final digits = text.replaceAll(RegExp(r'\D'), '');
+    if (digits.length >= 6 && widget.onPaste != null) {
+      widget.onPaste!(digits.substring(0, 6));
+    }
   }
 
   @override
@@ -409,33 +445,36 @@ class _OtpBoxState extends State<_OtpBox> {
           width: _focused ? 1.5 : 1,
         ),
         boxShadow: _focused
-            ? [
-                BoxShadow(
-                  color: NajmaColors.gold.withOpacity(0.15),
-                  blurRadius: 12,
-                ),
-              ]
+            ? [BoxShadow(
+                color: NajmaColors.gold.withOpacity(0.15),
+                blurRadius: 12,
+              )]
             : [],
       ),
-      child: TextField(
-        controller: widget.controller,
-        focusNode: widget.focusNode,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        style: const TextStyle(
-          fontFamily: 'PlayfairDisplay',
-          fontSize: 22,
-          fontWeight: FontWeight.w700,
-          color: NajmaColors.goldBright,
+      // نلتف بـ GestureDetector لنلتقط اللصق قبل TextField
+      child: GestureDetector(
+        onLongPress: _handlePasteAction,
+        child: TextField(
+          controller: widget.controller,
+          focusNode: widget.focusNode,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.number,
+          // maxLength = 6 حتى يمر اللصق، onChanged يعالجه
+          maxLength: 6,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          style: const TextStyle(
+            fontFamily: 'PlayfairDisplay',
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: NajmaColors.goldBright,
+          ),
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            counterText: '',
+            contentPadding: EdgeInsets.zero,
+          ),
+          onChanged: widget.onChanged,
         ),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          counterText: '',
-          contentPadding: EdgeInsets.zero,
-        ),
-        onChanged: widget.onChanged,
       ),
     );
   }

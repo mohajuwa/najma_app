@@ -113,48 +113,58 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Wordmark
+                  // Wordmark — NAJM (كبير) + AL SAHRA (صغير)
+                  ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      colors: [
+                        NajmaColors.goldDim,
+                        NajmaColors.goldBright,
+                        NajmaColors.gold,
+                        NajmaColors.goldBright,
+                        NajmaColors.goldDim,
+                      ],
+                    ).createShader(bounds),
+                    child: const Text(
+                      'NAJM',
+                      style: TextStyle(
+                        fontSize: 56,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        letterSpacing: 16,
+                        fontFamily: 'PlayfairDisplay',
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
                   ShaderMask(
                     shaderCallback: (bounds) => const LinearGradient(
                       colors: [
                         NajmaColors.goldDim,
                         NajmaColors.gold,
-                        NajmaColors.goldBright,
-                        NajmaColors.gold,
                         NajmaColors.goldDim,
                       ],
                     ).createShader(bounds),
                     child: const Text(
-                      'NAJMA',
+                      'A L   S A H R A',
                       style: TextStyle(
-                        fontSize: 44,
-                        fontWeight: FontWeight.w900,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w300,
                         color: Colors.white,
-                        letterSpacing: 10,
+                        letterSpacing: 7,
                         fontFamily: 'PlayfairDisplay',
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'نجمة',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: NajmaColors.gold,
-                      letterSpacing: 2,
-                      fontFamily: 'Tajawal',
-                    ),
-                  ),
                   const SizedBox(height: 12),
                   Container(
-                    width: 80,
-                    height: 1,
+                    width: 100,
+                    height: 0.7,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          NajmaColors.gold,
+                          NajmaColors.goldBright,
                           Colors.transparent,
                         ],
                       ),
@@ -162,12 +172,23 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   const SizedBox(height: 12),
                   const Text(
+                    'نجم السهرة',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: NajmaColors.gold,
+                      letterSpacing: 5,
+                      fontFamily: 'Tajawal',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
                     'حيث تلتقي الموهبة بلحظاتك المميزة',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 11,
                       color: NajmaColors.textDim,
                       fontFamily: 'Tajawal',
-                      letterSpacing: 1,
+                      letterSpacing: 1.5,
                     ),
                   ),
                 ],
@@ -278,4 +299,3 @@ class _Particle {
     required this.phase,
   });
 }
-

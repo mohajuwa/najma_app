@@ -13,6 +13,8 @@ class ArtistsBloc extends Bloc<ArtistsEvent, ArtistsState> {
     _repo = ArtistsRepositoryImpl(ArtistsDataSource());
     on<LoadArtistsEvent>(_onLoad);
     on<LoadArtistDetailEvent>(_onDetail);
+    on<RefreshArtistDetailEvent>(_onSilentRefresh);
+    on<SilentRefreshArtistInListEvent>(_onRefreshInList);
   }
 
   Future<void> _onLoad(LoadArtistsEvent e, Emitter<ArtistsState> emit) async {
@@ -38,8 +40,41 @@ class ArtistsBloc extends Bloc<ArtistsEvent, ArtistsState> {
       final artist = await _repo.getArtist(e.id);
       emit(ArtistDetailLoaded(artist));
     } catch (e) {
-      print('ARTIST DETAIL ERROR:  $e'); // ← أضف
+      print('ARTIST DETAIL ERROR:  $e');
       emit(ArtistsError('تعذّر تحميل بيانات الفنان'));
     }
+  }
+
+  /// تحديث صامت لصفحة التفاصيل — بدون loading
+  Future<void> _onSilentRefresh(
+    RefreshArtistDetailEvent e,
+    Emitter<ArtistsState> emit,
+  ) async {
+    try {
+      final artist = await _repo.getArtist(e.id);
+      emit(ArtistDetailLoaded(artist));
+    } catch (_) {}
+  }
+
+  /// تحديث فنان واحد في القائمة فقط — بدون إعادة تحميل كاملة
+  Future<void> _onRefreshInList(
+    SilentRefreshArtistInListEvent e,
+    Emitter<ArtistsState> emit,
+  ) async {
+    // فقط إذا كانت القائمة محمّلة
+    if (state is! ArtistsLoaded) return;
+    try {
+      final updated  = await _repo.getArtist(e.artistId);
+      final oldList  = (state as ArtistsLoaded).artists;
+      final newList  = oldList.map((a) {
+        return a.id == e.artistId
+            ? a.copyWith(
+                rating:       updated.rating,
+                reviewsCount: updated.reviewsCount,
+              )
+            : a;
+      }).toList();
+      emit(ArtistsLoaded(newList));
+    } catch (_) {}
   }
 }

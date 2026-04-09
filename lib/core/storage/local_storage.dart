@@ -12,9 +12,13 @@ class LocalStorage {
   static String? getToken() => _prefs?.getString('token');
   static Future<void> clearToken() async => _prefs?.remove('token');
 
-  // Role
+  // Role (الدور الـ active الذي اختاره المستخدم)
   static Future<void> saveRole(String role) async => _prefs?.setString('role', role);
   static String? getRole() => _prefs?.getString('role');
+
+  // Multi-role: هل لديه سجل فنان؟
+  static Future<void> saveIsArtist(bool v) async => _prefs?.setBool('is_artist', v);
+  static bool getIsArtist() => _prefs?.getBool('is_artist') ?? false;
 
   // Language
   static Future<void> saveLang(String lang) async => _prefs?.setString('lang', lang);

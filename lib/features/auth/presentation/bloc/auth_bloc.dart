@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import '../../../../core/storage/local_storage.dart';
 import '../../data/datasources/auth_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 
@@ -32,7 +33,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final auth = await _repo.verifyOtp(event.phone, event.otp, event.role);
-      emit(AuthSuccess(token: auth.token, role: auth.role));
+      await LocalStorage.saveIsArtist(auth.isArtist);
+      emit(AuthSuccess(token: auth.token, role: auth.role, isArtist: auth.isArtist));
     } on DioException catch (e) {
       emit(AuthError(_parseError(e)));
     } catch (_) {

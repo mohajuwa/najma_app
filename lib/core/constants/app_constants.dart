@@ -10,7 +10,7 @@ class AppConstants {
   static const reverbAppKey = 'najma_key';
 
   // App
-  static const appName = 'نجمة';
+  static const appName = 'نجم السهرة';
   static const appVersion = '1.0.0';
   static const commission = 0.35; // 35% platform fee
 

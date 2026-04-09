@@ -13,7 +13,8 @@ class OtpSent extends AuthState {
 class AuthSuccess extends AuthState {
   final String token;
   final String role;
-  AuthSuccess({required this.token, required this.role});
+  final bool   isArtist;
+  AuthSuccess({required this.token, required this.role, this.isArtist = false});
 }
 
 class AuthError extends AuthState {

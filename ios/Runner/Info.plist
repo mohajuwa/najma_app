@@ -45,5 +45,21 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- ── GPS ── -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>نجمة تحتاج موقعك لمشاركته مع عملائك أثناء الفعاليات</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>نجمة تحتاج موقعك لمشاركته مع عملائك أثناء الفعاليات</string>
+
+	<!-- ── Photos / Files ── -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>نجمة تحتاج الوصول لمكتبة الصور لرفع مقاطع الفيديو</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>نجمة تحتاج حفظ المحتوى في مكتبتك</string>
+
+	<!-- ── Microphone (للفيديو) ── -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>نجمة تحتاج الميكروفون لتسجيل الفيديو</string>
 </dict>
 </plist>

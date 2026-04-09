@@ -1,12 +1,26 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../theme/app_theme.dart';
 import '../router/app_router.dart';
 import '../l10n/locale_notifier.dart';
+import '../network/api_client.dart';
 
-class NajmaApp extends StatelessWidget {
+class NajmaApp extends StatefulWidget {
   const NajmaApp({super.key});
+
+  @override
+  State<NajmaApp> createState() => _NajmaAppState();
+}
+
+class _NajmaAppState extends State<NajmaApp> {
+  @override
+  void initState() {
+    super.initState();
+    // ربط 401 redirect — ينتقل للـ OTP عند انتهاء التوكن
+    ApiClient.setUnauthorizedCallback(() {
+      AppRouter.router.go('/otp');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +28,7 @@ class NajmaApp extends StatelessWidget {
       valueListenable: LocaleNotifier.instance,
       builder: (_, locale, __) {
         return MaterialApp.router(
-          title: 'نجمة',
+          title: 'نجم السهرة',
           debugShowCheckedModeBanner: false,
           theme: NajmaTheme.darkTheme,
           routerConfig: AppRouter.router,
@@ -30,4 +44,3 @@ class NajmaApp extends StatelessWidget {
     );
   }
 }
-
